@@ -1,38 +1,34 @@
 
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_app_state_management/models/superheroe_model.dart';
 
-class _SuperheroeServices{
+class SuperheroeService with ChangeNotifier{
 
-  Superheroe _superheroe;
-  //Obtener al objeto superheroe
-  Superheroe get superheroe => this._superheroe;
+    Superheroe  _superheroe;
+    Superheroe  get superheroe  =>  this._superheroe;
+    bool  get superheroeExist =>  (_superheroe != null )  ? true :false;
 
-  //CREAR UN NUEVO SUPERHEROE
-  void newSuperheroe(Superheroe superheroe){
-    this._superheroe=superheroe;
-    _superheroeStreamController.add(_superheroe);
-  }
+    set superheroe(Superheroe superheroe){
+      _superheroe = superheroe;
+      notifyListeners();
+    }
 
-  //Saber si un superheroe existe
-  bool get superheroeExist => (_superheroe !=null)?true :false;
+    void changeExperience(int exp){
+      this._superheroe.experiencie = exp;
+      notifyListeners();
+    }
 
-  //ChangeExperience
-  void changeExperience(int exp){
-    _superheroe.experiencie=exp;
-    _superheroeStreamController.add(_superheroe);
-  }
+    void removeSuperheroe(){
+      this._superheroe=null;
+      notifyListeners();
+    }
 
+    void addPowers(){
+      this._superheroe.powers.add('Power ${_superheroe.powers.length+1}');
+      notifyListeners();
+    }
 
-  //Stream
-  StreamController _superheroeStreamController = StreamController<Superheroe>.broadcast();
-  Stream<Superheroe> get superheroeStream =>_superheroeStreamController.stream;
-
-  closeStream(){
-    _superheroeStreamController.close();
-  }
 
 }
-
-final superheroeService= new _SuperheroeServices();

@@ -2,18 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_state_management/models/superheroe_model.dart';
 import 'package:flutter_app_state_management/services/superheroe_services.dart';
+import 'package:provider/provider.dart';
+
 
 class Page2page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final superheroeService = Provider.of<SuperheroeService>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: StreamBuilder(
-          stream: superheroeService.superheroeStream,
-          builder: (context, AsyncSnapshot<Superheroe> snapshot) {
-           return  snapshot.hasData ?  Text(snapshot.data.name):Text("Page 2");
-          },
-        ),
+        title: Text("Page 2")
       ),
       body: Center(
         child: Column(
@@ -23,10 +22,10 @@ class Page2page extends StatelessWidget {
               onPressed: (){
                 Superheroe heroe = new Superheroe(
                   name: "Spidy",
-                  experiencie: 20,
-                  powers: ["es rico"]
+                  experiencie: 15,
+                  powers: ["es rico","GWEN Stacy"]
                 );
-                superheroeService.newSuperheroe(heroe);
+                superheroeService.superheroe=heroe;
               },
               child: Text("Anadir superheroe",
                 style: TextStyle(color: Colors.white),
@@ -38,7 +37,7 @@ class Page2page extends StatelessWidget {
               color: Colors.deepPurpleAccent,
               child: Text("Modificar anos experiencia"),
               onPressed: (){
-                superheroeService.changeExperience(25);
+                superheroeService.changeExperience(100);
               }
             ),
             SizedBox(height: 13,),

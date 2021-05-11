@@ -1,15 +1,25 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app_state_management/models/superheroe_model.dart';
 import 'package:flutter_app_state_management/pages/page_2_page.dart';
 import 'package:flutter_app_state_management/services/superheroe_services.dart';
+import 'package:provider/provider.dart';
 
 class Page1page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final superheroeService = Provider.of<SuperheroeService>(context);
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Superheroe"),
         backgroundColor: Colors.deepPurpleAccent,
+        actions: [
+          IconButton(icon: Icon(Icons.delete), onPressed: (){
+
+          })
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -18,12 +28,12 @@ class Page1page extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder:(context) => Page2page(),));
         },
       ),
-      body: StreamBuilder(
-        stream: superheroeService.superheroeStream,
-        builder: (BuildContext context, AsyncSnapshot<Superheroe> snapshot) {
-          return snapshot.hasData ? InformationWidget(heroe: snapshot.data,):Center(child: Text("No hay Data"));
-        },
-      )
+      body: superheroeService.superheroeExist
+          ? InformationWidget(heroe: superheroeService.superheroe,
+            )
+          : Center(
+            child: Text("No hay data"),
+            )
     );
   }
 }
@@ -63,15 +73,12 @@ class InformationWidget extends StatelessWidget {
             ),
           ),
           Divider(),
-          ListTile(
-            title: Text("Poder 1: "),
-          ),
-          ListTile(
-            title: Text("Poder 2: "),
-          ),
-          ListTile(
-            title: Text("Poder 3: "),
-          ),
+          Column(
+            children: heroe.powers.map((e) =>
+            ListTile(
+              title: Text(e),
+            )).toList(),
+          )
         ],
       ),
     );
